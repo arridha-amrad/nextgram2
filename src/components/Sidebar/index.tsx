@@ -1,59 +1,8 @@
 import Link from "next/link";
-import {
-  Home,
-  Search,
-  Compass,
-  Bell,
-  Mail,
-  SquarePen,
-  LogOut,
-} from "lucide-react";
-import NavLink from "./NavLink";
 import { SwitchTheme } from "../SwitchTheme";
 import ProfileLink from "./ProfileLink";
 import getServerSession from "@/getServerSession";
-
-const className = {
-  icon: "w-6 h-6",
-};
-
-const links = [
-  {
-    href: "/",
-    title: "Home",
-    icon: <Home className={className.icon} />,
-  },
-  {
-    href: "/search",
-    title: "Search",
-    icon: <Search className={className.icon} />,
-  },
-  {
-    href: "/explore",
-    title: "Explore",
-    icon: <Compass className={className.icon} />,
-  },
-  {
-    href: "/notifications",
-    title: "Notifications",
-    icon: <Bell className={className.icon} />,
-  },
-  {
-    href: "/messages",
-    title: "Messages",
-    icon: <Mail className={className.icon} />,
-  },
-  {
-    href: "/create-post",
-    title: "New Post",
-    icon: <SquarePen className={className.icon} />,
-  },
-  {
-    href: "/logout",
-    title: "Logout",
-    icon: <LogOut className={className.icon} />,
-  },
-];
+import Links from "./Links";
 
 async function Sidebar() {
   const session = await getServerSession();
@@ -77,9 +26,7 @@ async function Sidebar() {
         </h1>
       </Link>
       <div className="space-y-1 py-4 w-full flex-1">
-        {links.map((link) => (
-          <NavLink link={link} key={link.href} />
-        ))}
+        <Links />
         <ProfileLink
           avatarUrl={session?.user.image}
           username={session?.user.username}

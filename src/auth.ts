@@ -56,9 +56,13 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (account?.type === "credentials") {
         return true;
       }
+
+      console.log({ user });
+      console.log({ account });
+
       const { email: em, name, image } = user;
       if (em && name && image && account) {
-        const username = `${em.split("@")[0]} ${crypto.randomUUID()}`;
+        const username = `${em.split("@")[0]}${crypto.randomUUID()}`;
         await db
           .insert(UsersTable)
           .values({

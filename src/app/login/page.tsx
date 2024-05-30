@@ -1,4 +1,6 @@
 import LoginForm from "@/components/Form/FormLogin";
+import GithubLoginButton from "@/components/Form/FormLogin/GithubLoginBtn";
+import GoogleLoginButton from "@/components/Form/FormLogin/GoogleLoginBtn";
 import getServerSession from "@/getServerSession";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -18,7 +20,10 @@ async function Page() {
           <span className="px-1">Gram</span>
         </h1>
       </div>
-      <LoginForm />
+      <LoginForm>
+        <GoogleLoginButton />
+        <GithubLoginButton />
+      </LoginForm>
       <div className="mt-4 space-x-2">
         <p className="inline">Don&apos;have an account ?</p>
         <Link

@@ -9,10 +9,15 @@ type Props = {
     href: string;
     title: string;
     icon: JSX.Element;
+    isInterCeptedRoute: boolean;
   };
+  prevRoute: string;
 };
 
-function NavLink({ link: { href, icon, title } }: Props) {
+function NavLink({
+  link: { href, icon, title, isInterCeptedRoute },
+  prevRoute,
+}: Props) {
   const pathname = usePathname();
   const isPath = pathname === href;
   return (
@@ -21,7 +26,7 @@ function NavLink({ link: { href, icon, title } }: Props) {
         "flex items-center justify-center xl:justify-start rounded-lg h-[50px] gap-4 xl:px-4",
         isPath ? "bg-foreground/10" : "hover:bg-foreground/10"
       )}
-      href={href}
+      href={isInterCeptedRoute ? `${href}?cb=${prevRoute}` : href}
     >
       {icon}
       <span className={cn("xl:block hidden", isPath ? "font-semibold" : "")}>

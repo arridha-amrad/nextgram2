@@ -11,14 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "../../ui/checkbox";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import LoginSubmitButton from "./LoginSubmitBtn";
 import { useFormState } from "react-dom";
 import { loginAction } from "./login-action";
 import GoogleLoginButton from "./GoogleLoginBtn";
 import GithubLoginButton from "./GithubLoginBtn";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 
 const initState = {
   type: "",
@@ -26,7 +25,11 @@ const initState = {
   errors: {} as any,
 };
 
-export default function LoginForm() {
+type Props = {
+  children: ReactNode;
+};
+
+export default function LoginForm({ children }: Props) {
   const [isShow, setIsShow] = useState(false);
   const [formState, formAction] = useFormState(loginAction, initState);
   const { toast } = useToast();
@@ -91,8 +94,7 @@ export default function LoginForm() {
         </CardFooter>
       </form>
       <div className="flex pb-3 mt-6 justify-center items-center gap-4">
-        <GoogleLoginButton />
-        <GithubLoginButton />
+        {children}
       </div>
     </Card>
   );
