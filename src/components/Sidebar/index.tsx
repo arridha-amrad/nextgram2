@@ -1,8 +1,17 @@
 import Link from "next/link";
-import { Home, Search, Compass, Bell, Mail, SquarePen } from "lucide-react";
+import {
+  Home,
+  Search,
+  Compass,
+  Bell,
+  Mail,
+  SquarePen,
+  LogOut,
+} from "lucide-react";
 import NavLink from "./NavLink";
 import { SwitchTheme } from "../SwitchTheme";
 import ProfileLink from "./ProfileLink";
+import getServerSession from "@/getServerSession";
 
 const className = {
   icon: "w-6 h-6",
@@ -39,9 +48,18 @@ const links = [
     title: "New Post",
     icon: <SquarePen className={className.icon} />,
   },
+  {
+    href: "/logout",
+    title: "Logout",
+    icon: <LogOut className={className.icon} />,
+  },
 ];
 
-function Sidebar() {
+async function Sidebar() {
+  const session = await getServerSession();
+  if (!session) {
+    return null;
+  }
   return (
     <aside className="w-full h-full pb-4 flex flex-shrink-0 flex-col xl:pr-4">
       <Link
@@ -62,7 +80,10 @@ function Sidebar() {
         {links.map((link) => (
           <NavLink link={link} key={link.href} />
         ))}
-        <ProfileLink />
+        <ProfileLink
+          avatarUrl={session?.user.image}
+          username={session?.user.username}
+        />
       </div>
       <SwitchTheme />
     </aside>

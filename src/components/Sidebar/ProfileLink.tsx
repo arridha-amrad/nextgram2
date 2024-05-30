@@ -3,12 +3,18 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-function ProfileLink() {
+type Props = {
+  username: string;
+  avatarUrl?: string | null;
+};
+
+function ProfileLink({ avatarUrl, username }: Props) {
   const pathaname = usePathname();
-  const target = "/ari";
+  const target = `/${username}`;
   const isPath = target === pathaname;
+
   return (
     <Link
       className={cn(
@@ -17,7 +23,10 @@ function ProfileLink() {
       )}
       href={target}
     >
-      <User className="w-6 h-6" />
+      <Avatar className="w-8 h-8">
+        <AvatarImage src={avatarUrl ?? ""} alt="avatar" />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
       <span className={cn("xl:block hidden", isPath ? "font-semibold" : "")}>
         Profile
       </span>

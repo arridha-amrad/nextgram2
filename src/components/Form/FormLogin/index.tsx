@@ -11,24 +11,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "../../ui/checkbox";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LoginSubmitButton from "./LoginSubmitBtn";
 import { useFormState } from "react-dom";
 import { loginAction } from "./login-action";
 import GoogleLoginButton from "./GoogleLoginBtn";
 import GithubLoginButton from "./GithubLoginBtn";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const initState = {
+  type: "",
+  message: "",
   errors: {} as any,
 };
 
 export default function LoginForm() {
   const [isShow, setIsShow] = useState(false);
   const [formState, formAction] = useFormState(loginAction, initState);
+  const { toast } = useToast();
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (formState?.message) {
+      toast({
+        variant: formState.type === "error" ? "destructive" : "default",
+        title:
+          formState.type === "error"
+            ? "Uh oh! Something went wrong."
+            : "Congratuation",
+        description: formState.message,
+      });
+    }
+  }, [formState?.message, formState?.type]);
 
   return (
     <Card className="w-full">
-      <form action={formAction}>
+      <form ref={formRef} action={formAction}>
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Login to your nextgram account</CardDescription>
@@ -38,7 +58,7 @@ export default function LoginForm() {
             <Label htmlFor="email">Email Address</Label>
             <Input name="email" type="text" id="email" />
             <small className="text-sm dark:text-red-700 text-red-500 font-medium leading-none">
-              {formState?.errors.email ? formState.errors.email[0] : ""}
+              {formState?.errors?.email ? formState.errors.email[0] : ""}
             </small>
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -49,7 +69,7 @@ export default function LoginForm() {
               id="password"
             />
             <small className="text-sm dark:text-red-700 text-red-500 font-medium leading-none">
-              {formState?.errors.password ? formState.errors.password[0] : ""}
+              {formState?.errors?.password ? formState.errors.password[0] : ""}
             </small>
           </div>
           <div className="flex items-center space-x-2">

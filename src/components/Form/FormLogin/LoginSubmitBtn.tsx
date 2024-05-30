@@ -1,6 +1,6 @@
 import { useFormStatus } from "react-dom";
 import { Button } from "../../ui/button";
-import { Loader2 } from "lucide-react";
+import MySpinner from "@/components/Spinner";
 
 function LoginSubmitButton() {
   const { pending } = useFormStatus();
@@ -8,7 +8,7 @@ function LoginSubmitButton() {
     <Button type="submit" className="min-w-[150px]" disabled={pending}>
       {pending ? (
         <>
-          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          <MySpinner className="mr-3" />
           loading...
         </>
       ) : (

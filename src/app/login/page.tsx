@@ -1,7 +1,13 @@
 import LoginForm from "@/components/Form/FormLogin";
+import getServerSession from "@/getServerSession";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-function Page() {
+async function Page() {
+  const session = await getServerSession();
+  if (session) {
+    redirect("/");
+  }
   return (
     <main className="overflow-y-auto py-4 flex items-center justify-center flex-col min-h-screen max-w-md mx-auto">
       <div className="my-8 self-end">

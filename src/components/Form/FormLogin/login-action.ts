@@ -1,5 +1,11 @@
 "use server";
 
+import { signIn } from "@/auth";
+import db from "@/drizzle/db";
+import { UsersTable } from "@/drizzle/schema";
+import { verify } from "argon2";
+import { eq } from "drizzle-orm";
+import { RedirectType, redirect } from "next/navigation";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -8,7 +14,6 @@ const loginSchema = z.object({
 });
 
 export const loginAction = async (prevState: any, formData: FormData) => {
-  await new Promise((res) => setTimeout(res, 3000));
   const validatedFields = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -18,4 +23,46 @@ export const loginAction = async (prevState: any, formData: FormData) => {
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
+
+  const { email, password } = validatedFields.data;
+
+  const [dbUser] = await db
+    .select()
+    .from(UsersTable)
+    .where(eq(UsersTable.email, email));
+
+  if (!dbUser) {
+    return {
+      type: "error",
+      message: "User not found",
+    };
+  }
+
+  if (!dbUser.password) {
+    return {
+      type: "error",
+      message: "Invalid credentials",
+    };
+  }
+
+  const isMatch = await verify(dbUser.password, password);
+
+  if (!isMatch) {
+    return {
+      type: "error",
+      message: "Wrong password",
+    };
+  }
+
+  await signIn("credentials", {
+    id: dbUser.id,
+    username: dbUser.username,
+    email: dbUser.email,
+    image: dbUser.avatar,
+    name: dbUser.name,
+    redirect: true,
+    redirectTo: "/",
+  });
+
+  // return redirect("/", RedirectType.replace);
 };

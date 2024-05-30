@@ -1,6 +1,10 @@
 "use server";
 
+import db from "@/drizzle/db";
+import { UsersTable } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { hash } from "argon2";
 
 const schema = z.object({
   name: z.string().min(5, { message: "Invalid name" }),
@@ -21,6 +25,44 @@ export const registerAction = async (prevState: any, formData: FormData) => {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email, name, password, username } = Object.fromEntries(
+    formData.entries()
+  ) as z.infer<typeof schema>;
+
+  try {
+    const [registeredUser] = await db
+      .select()
+      .from(UsersTable)
+      .where(eq(UsersTable.email, email));
+
+    if (registeredUser) {
+      return {
+        type: "error",
+        message: "Email has been registered",
+      };
+    }
+
+    const hashedPassword = await hash(password);
+
+    await db.insert(UsersTable).values({
+      username,
+      email,
+      name,
+      provider: "credentials",
+      password: hashedPassword,
+    });
+    return {
+      type: "success",
+      message: "Registration successful",
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      type: "error",
+      message: "Something went wrong",
     };
   }
 };
