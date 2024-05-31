@@ -14,10 +14,7 @@ type Props = {
   prevRoute: string;
 };
 
-function NavLink({
-  link: { href, icon, title, isInterCeptedRoute },
-  prevRoute,
-}: Props) {
+function NavLink({ link: { href, icon, title } }: Props) {
   const pathname = usePathname();
   const isPath = pathname === href;
   return (

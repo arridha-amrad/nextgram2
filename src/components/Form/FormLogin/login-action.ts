@@ -5,7 +5,6 @@ import db from "@/drizzle/db";
 import { UsersTable } from "@/drizzle/schema";
 import { verify } from "argon2";
 import { eq } from "drizzle-orm";
-import { RedirectType, redirect } from "next/navigation";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -63,6 +62,4 @@ export const loginAction = async (prevState: any, formData: FormData) => {
     redirect: true,
     redirectTo: "/",
   });
-
-  // return redirect("/", RedirectType.replace);
 };

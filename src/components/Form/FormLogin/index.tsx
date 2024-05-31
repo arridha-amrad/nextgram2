@@ -15,8 +15,6 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import LoginSubmitButton from "./LoginSubmitBtn";
 import { useFormState } from "react-dom";
 import { loginAction } from "./login-action";
-import GoogleLoginButton from "./GoogleLoginBtn";
-import GithubLoginButton from "./GithubLoginBtn";
 import { useToast } from "@/components/ui/use-toast";
 
 const initState = {

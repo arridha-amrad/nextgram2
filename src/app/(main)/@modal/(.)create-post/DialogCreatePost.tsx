@@ -6,19 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
-function SearchDialog({ children }: Props) {
+function DialogCreatePost({ children }: Props) {
   const router = useRouter();
-  const pathname = usePathname();
-
-  if (pathname !== "/search") return null;
-
   return (
     <Dialog
       defaultOpen
@@ -28,9 +24,14 @@ function SearchDialog({ children }: Props) {
         }
       }}
     >
-      <DialogContent className="w-full max-w-md max-h-screen top-[10%] -translate-y-[10%]">
+      <DialogContent
+        className="max-h-screen max-w-[800px]"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
-          <DialogTitle>Search Users</DialogTitle>
+          <DialogTitle>Create new post</DialogTitle>
         </DialogHeader>
         {children}
       </DialogContent>
@@ -38,4 +39,4 @@ function SearchDialog({ children }: Props) {
   );
 }
 
-export default SearchDialog;
+export default DialogCreatePost;

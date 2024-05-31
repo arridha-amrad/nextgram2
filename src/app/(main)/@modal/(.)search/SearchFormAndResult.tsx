@@ -5,15 +5,14 @@ import SearchSubmitButton from "./SearchSubmitButton";
 import { useFormState } from "react-dom";
 import { searchAction } from "./search-action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const initialState = {
   result: [] as any,
 };
 
-function SearchInput() {
+function SearchFormAndResult() {
   const [formState, formAction] = useFormState(searchAction, initialState);
-  const router = useRouter();
 
   return (
     <div className="space-y-4 max-w-md">
@@ -28,11 +27,9 @@ function SearchInput() {
       </form>
       <div className="">
         {formState.result.map((user: any) => (
-          <div
-            onClick={() => {
-              router.push(`/${user.username}`);
-            }}
-            className="flex overflow-x-hidden items-start gap-4 hover:bg-foreground/10 px-4 py-2 rounded-lg max-w-sm"
+          <Link
+            href={`/${user.username}`}
+            className="flex overflow-x-hidden items-start gap-4 py-2 rounded-lg max-w-sm"
             key={user.id}
           >
             <Avatar>
@@ -44,15 +41,15 @@ function SearchInput() {
                   .join("")}
               </AvatarFallback>
             </Avatar>
-            <div className="overflow-x-hidden">
-              <p className="truncate font-semibold max-w-sm">{user.username}</p>
+            <div className="w-full text-sm overflow-hidden">
+              <p className="truncate">{user.username}</p>
               <p className="text-muted-foreground">{user.name}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
   );
 }
 
-export default SearchInput;
+export default SearchFormAndResult;
