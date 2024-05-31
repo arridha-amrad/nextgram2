@@ -20,10 +20,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  intercept,
 }: Readonly<{
   children: React.ReactNode;
-  intercept: ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -34,7 +32,6 @@ export default function RootLayout({
         <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
-            {intercept}
             <Toaster />
           </ThemeProvider>
         </SessionProvider>

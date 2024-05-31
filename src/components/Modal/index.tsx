@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 type Props = {
@@ -15,27 +15,30 @@ type Props = {
   children: ReactNode;
 };
 
+const paths = ["/messages", "/explore", "/"];
+
 export default function ModalGanteng({ children, title }: Props) {
   const router = useRouter();
   const [state, setState] = useState(true);
-  const qp = useSearchParams();
-  const cbUrl = qp.get("cb");
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (paths.find((p) => p === pathname)) {
+      setState(false);
+    } else {
+      setState(true);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!state) {
-      router.push(cbUrl ?? "/");
+      router.back();
     }
   }, [state]);
 
-  useEffect(() => {
-    if (cbUrl) {
-      setState(true);
-    }
-  }, [cbUrl]);
-
   return (
     <Dialog modal={true} open={state} onOpenChange={setState}>
-      <DialogContent className="w-full overflow-y-scroll max-h-screen">
+      <DialogContent className="w-full max-w-md overflow-y-scroll overflow-x-hidden max-h-screen top-[10%] -translate-y-[10%]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

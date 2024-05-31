@@ -11,27 +11,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { logoutAction } from "./action";
 
 export default function Alert() {
   const [open, setOpen] = useState(true);
   const router = useRouter();
+  const qp = useSearchParams();
+  const cbUrl = qp.get("cb");
 
   // to handle esc press
   useEffect(() => {
     if (!open) {
-      router.back();
+      router.push(cbUrl ?? "/");
     }
   }, [open]);
 
+  useEffect(() => {
+    if (cbUrl) {
+      setOpen(true);
+    }
+  }, [cbUrl]);
+
   const logout = async () => {
     await signOut({ callbackUrl: "/login" });
-    // await logoutAction();
-    // setOpen(false);
-    // router.refresh();
-    // window.location.href = "/login";
   };
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
